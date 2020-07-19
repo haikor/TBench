@@ -1,6 +1,6 @@
 # TBench
 
-Bench tool made by Teck
+Bench tool developed by Teck
 
 ## v1 stand-alone 2020-07-19
 
@@ -75,6 +75,6 @@ qps:    326.4645198359842
 ```
 
 
-## v2 cluster version
-support culster
+## v2 cluster version 
+about support culster
 
