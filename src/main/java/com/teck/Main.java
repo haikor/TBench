@@ -14,16 +14,16 @@ public class Main {
 
         CommandLineParser parser = new DefaultParser();
         Options options = new Options();
-        options.addOption("h", "host", true, "Url to bench");
+        options.addOption("u", "url", true, "Url to bench");
         options.addOption("r", "request", true, "Request count");
         options.addOption("c", "concurrency", true, "Concurrency of cli");
         CommandLine commandLine = parser.parse(options, args);
-        if (!commandLine.hasOption("h")) {
-            System.out.println("UseAge: -h {host} -q {requestCount} -c {concurrency}");
+        if (!commandLine.hasOption("u")) {
+            System.out.println("UseAge: -u {url} -q {requestCount} -c {concurrency}");
             return;
         }
 
-        var url = Optional.ofNullable(commandLine.getOptionValue("h")).orElse("https://www.baidu.com");
+        var url = Optional.ofNullable(commandLine.getOptionValue("u")).orElse("https://www.baidu.com");
         var requestCount = Integer.valueOf(Optional.ofNullable(commandLine.getOptionValue("r")).orElse("1"));
         var concurrency = Integer.valueOf(Optional.ofNullable(commandLine.getOptionValue("c")).orElse("10"));
 
