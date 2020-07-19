@@ -17,21 +17,34 @@ public class Main {
         options.addOption("u", "url", true, "Url to bench");
         options.addOption("r", "request", true, "Request count");
         options.addOption("c", "concurrency", true, "Concurrency of cli");
+        options.addOption("cc", "check-content", true, "check return data to insure response is ok");
+        options.addOption("d", "debug", false, "print debug info");
+
+
         CommandLine commandLine = parser.parse(options, args);
         if (!commandLine.hasOption("u")) {
             System.out.println("UseAge: -u {url} -q {requestCount} -c {concurrency}");
             return;
         }
 
-        var url = Optional.ofNullable(commandLine.getOptionValue("u")).orElse("https://www.baidu.com");
-        var requestCount = Integer.valueOf(Optional.ofNullable(commandLine.getOptionValue("r")).orElse("1"));
-        var concurrency = Integer.valueOf(Optional.ofNullable(commandLine.getOptionValue("c")).orElse("10"));
-
-        System.out.println(url);
+        var u = Optional.ofNullable(commandLine.getOptionValue("u")).orElse("https://www.baidu.com");
+        var r = Integer.valueOf(Optional.ofNullable(commandLine.getOptionValue("r")).orElse("1"));
+        var c = Integer.valueOf(Optional.ofNullable(commandLine.getOptionValue("c")).orElse("10"));
+        var cc = Optional.ofNullable(commandLine.getOptionValue("cc")).orElse("");
+        var d = commandLine.hasOption("d");
 
         var begin = System.currentTimeMillis();
-        BenchExecutor benchExecutetor = new BenchExecutor(concurrency);
-        benchExecutetor.execute(url, requestCount);
+        BenchExecutor benchExecutetor = new BenchExecutor(new ExecuteInfo() {{
+            this.url = u;
+            this.requestCount = r;
+            this.concurrency = c;
+            this.checkContent = cc;
+            this.debug = d;
+        }});
+
+        System.out.println("start bench:" + u);
+
+        benchExecutetor.execute();
 
         benchExecutetor.shutdown();
         while (!benchExecutetor.awaitTermination(100, TimeUnit.MILLISECONDS)) {

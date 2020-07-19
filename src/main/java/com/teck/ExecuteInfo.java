@@ -1,9 +1,9 @@
 package com.teck;
 
-import lombok.var;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.LongSummaryStatistics;
 
 public class ExecuteInfo {
     public List<Long> requestTimes = new ArrayList<>();
@@ -11,6 +11,9 @@ public class ExecuteInfo {
     public int errorCount;
     public Integer requestCount;
     public int concurrency;
+    public String url;
+    public String checkContent;
+    public Boolean debug;
 
 
     @Override
@@ -18,10 +21,13 @@ public class ExecuteInfo {
         if (completeCount == 0) {
             return "no query";
         }
-        var failRate = 100.0 * errorCount / completeCount;
-        requestTimes.sort(Long::compare);
-        var ninetyFiveResposetime = requestTimes.get((int) (requestTimes.size() * 0.95));
-        var summary = requestTimes.stream().mapToLong(e -> e).summaryStatistics();
+        double failRate = 100.0 * errorCount / completeCount;
+        long ninetyFiveResposetime = 0L;
+        if (requestTimes.size() > 0) {
+            requestTimes.sort(Long::compare);
+            ninetyFiveResposetime = requestTimes.get((int) (requestTimes.size() * 0.95));
+        }
+        LongSummaryStatistics summary = requestTimes.stream().mapToLong(e -> e).summaryStatistics();
 
         return String.format(
                 "concurrency:\t%s\n" +
